@@ -2,13 +2,14 @@
 <html lang="ko-KR">
 
 <head>
+  {% load static %}
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시판</title>
-  <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/table.css">
-  <link rel="stylesheet" href="./css/list.css">
+  <link rel="stylesheet" href="{% static './css/common.css' %}">
+  <link rel="stylesheet" href="{% static './css/table.css' %}">
+  <link rel="stylesheet" href="{% static './css/list.css' %}">
 </head>
 
 <body>
@@ -40,7 +41,7 @@
           <label for="search" class="a11y-hidden">검색</label>
           <input id="search" type="search" placeholder="검색어를 입력해주세요">
           <button type="submit">
-            <img src="./img/icon-search.png" alt="검색">
+            <img src="{% static './img/icon-search.png' %}" alt="검색"> 
           </button>
         </form>
 
@@ -94,11 +95,11 @@
     <div class="board-bottom">
       <!-- 페이지 -->
       <div class="pagination">
-        <a href="#"><img src="./img/first.png" alt="첫번째 페이지"></a>
-        <a href="#"><img src="./img/prev.png" alt="이전 페이지"></a>
+        <a href="#"><img src="{% static './img/first.png' %}" alt="첫번째 페이지"></a>
+        <a href="#"><img src="{% static './img/prev.png' %}" alt="이전 페이지"></a>
         <a href="#" class="active">1</a>
-        <a href="#"><img src="./img/next.png" alt="첫번째 페이지"></a>
-        <a href="#"><img src="./img/last.png" alt="이전 페이지"></a>
+        <a href="#"><img src="{% static './img/next.png' %}" alt="첫번째 페이지"></a>
+        <a href="#"><img src="{% static './img/last.png' %}" alt="이전 페이지"></a>
       </div>
       <!-- //페이지 -->
       <div class="btn-group">
