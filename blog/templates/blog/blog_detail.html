@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ post.title }}</title>
+  <link rel="stylesheet" href="{% static './css/common.css' %}">
+  <link rel="stylesheet" href="{% static './css/view.css' %}">
+</head>
+
+<body>
+  <!-- header -->
+  <div class="header">
+    <h1><a href="index.html">HTML/CSS 실습</a></h1>
+    <div class="header-click">
+      <a href="chat.html">채팅</a>
+      <a href="login.html">로그인</a>
+      <a href="join.html">회원가입</a>
+      <button type="button">로그아웃</button>
+    </div>
+  </div>
+  <!-- // header -->
+
+  <div class="main">
+
+
+    <h2 class="main-title"> {{ object.title }}</h2>
+
+
+    <div class="view">
+      <div class="view-header">
+        <div class="view-info">
+        </div>
+      </div>
+      <div class="view-content">
+        <img src="{% static './img/est.jpg' %}" alt="EST">
+        {{ object.content }}
+      </div>
+    </div>
+    <div class="btn-group">
+      <a href="./index.html" class="btn">목록</a>
+      <a href="#" class="btn">수정</a>
+      <button type="button" class="btn">삭제</button>
+    </div>
+
+  </div>
+  <!-- footer -->
+  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
+  <!-- //footer -->
+</body>
+
+</html>
