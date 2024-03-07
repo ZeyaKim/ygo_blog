@@ -1,14 +1,22 @@
-from django.shortcuts import render
 from blog.models import BlogPost
+from django.views.generic import ListView, DetailView
 
 
-# Create your views here.
-def blog_list(request):
-    posts = BlogPost.objects.all()
-    context = {"posts": posts}
-    return render(request, "blog_list.html", context)
+class BlogListView(ListView):
+    model = BlogPost
+    template_name = "blog_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["posts"] = BlogPost.objects.all()
+        return context
 
 
-def blog_detail(request, id):
-    context = {"id": id}
-    return render(request, "blog_detail.html", context)
+class BlogDetailView(DetailView):
+    model = BlogPost
+    template_name = "blog_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["id"] = self.kwargs.get("id")
+        return context
