@@ -1,5 +1,5 @@
 from blog.models import BlogPost
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from blog.forms import BlogPostForm
 
 
@@ -27,6 +27,17 @@ class PostCreateView(CreateView):
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
     # fields = ["title", "category", "content"]
+    success_url = "/blog/"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostUpdateView(UpdateView):
+    model = BlogPost
+    form_class = BlogPostForm
+    template_name = "blog/blog_write.html"
     success_url = "/blog/"
 
     def form_valid(self, form):
