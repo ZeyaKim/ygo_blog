@@ -30,43 +30,11 @@
     <h2 class="main-title">글쓰기</h2>
     <p class="main-desc">내용을 입력 해주세요.</p>
 
-    <form>
+    <form method="post">
       {% csrf_token %}
-      <table class="table write">
-        <colgroup>
-          <col style="width: 120px">
-          <col>
-        </colgroup>
-        <tbody>
-          <tr>
-            <th><label for="category">카테고리</label></th>
-            <td>
-              <select id="category">
-                <option value="1">일반</option>
-                <option value="2">공지사항</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="board-title">제목</label></th>
-            <td><input type="text" id="board-title" name="boardTitle"></td>
-          </tr>
-          <tr>
-            <th><label for="board-content">내용</label></th>
-            <td>
-              <textarea id="board-content"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="board-file">파일첨부</label></th>
-            <td>
-              <input type="file" id="board-file">
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      {{ form.as_p }}
       <div class="btn-group">
-        <a href="./index.html" class="btn">목록</a>
+        <a href="./blog_list.html" class="btn">목록</a>
         <button type="reset" class="btn">초기화</button>
         <button type="submit" class="btn">작성</button>
       </div>
