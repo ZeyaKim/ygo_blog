@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ post.title }}</title>
-  <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/view.css">
+  <link rel="stylesheet" href="{% static './css/common.css' %}">
+  <link rel="stylesheet" href="{% static './css/view.css' %}">
 </head>
 
 <body>
@@ -27,18 +27,17 @@
   <div class="main">
 
 
-    <h2 class="main-title">글 조회</h2>
+    <h2 class="main-title"> {{ object.title }}</h2>
 
 
     <div class="view">
       <div class="view-header">
-        <h2>{}</h2>
         <div class="view-info">
         </div>
       </div>
       <div class="view-content">
-        <img src="./img/est.jpg" alt="EST">
-        {{ post.content }}
+        <img src="{% static './img/est.jpg' %}" alt="EST">
+        {{ object.content }}
       </div>
     </div>
     <div class="btn-group">
