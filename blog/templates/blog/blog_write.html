@@ -2,13 +2,14 @@
 <html lang="ko-KR">
 
 <head>
-  {% load static %}
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ post.title }}</title>
-  <link rel="stylesheet" href="{% static './css/common.css' %}">
-  <link rel="stylesheet" href="{% static './css/view.css' %}">
+  <title>글쓰기</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/table.css">
+  <link rel="stylesheet" href="./css/write.css">
+
 </head>
 
 <body>
@@ -25,27 +26,23 @@
   <!-- // header -->
 
   <div class="main">
+    <!-- 글쓰기 페이지 -->
+    <h2 class="main-title">글쓰기</h2>
+    <p class="main-desc">내용을 입력 해주세요.</p>
 
-
-    <h2 class="main-title"> {{ object.title }}</h2>
-
-
-    <div class="view">
-      <div class="view-header">
-        <div class="view-info">
-        </div>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="btn-group">
+        <a href="./blog_list.html" class="btn">목록</a>
+        <button type="reset" class="btn">초기화</button>
+        <button type="submit" class="btn">작성</button>
       </div>
-      <div class="view-content">
-        {{ object.content }}
-      </div>
-    </div>
-    <div class="btn-group">
-      <a href="./index.html" class="btn">목록</a>
-      <a href="#" class="btn">수정</a>
-      <button type="button" class="btn">삭제</button>
-    </div>
+    </form>
 
+    <!--  //글쓰기 페이지 -->
   </div>
+
   <!-- footer -->
   <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
   <!-- //footer -->
