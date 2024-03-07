@@ -6,5 +6,4 @@ class BlogPostAdmin(admin.ModelAdmin):
     list_display = ("title", "content")
 
 
-# Register your models here.
-admin.site.register(BlogPost)
+admin.site.register(BlogPost, BlogPostAdmin)
