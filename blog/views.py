@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 
 class BlogListView(ListView):
     model = BlogPost
-    template_name = "blog_list.html"
+    template_name = "blog/blog_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -14,7 +14,7 @@ class BlogListView(ListView):
 
 class BlogDetailView(DetailView):
     model = BlogPost
-    template_name = "blog_detail.html"
+    template_name = "blog/blog_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
