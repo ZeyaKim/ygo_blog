@@ -1,5 +1,11 @@
 from blog.models import BlogPost
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from blog.forms import BlogPostForm
 
 
@@ -43,3 +49,9 @@ class PostUpdateView(UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class PostDeleteView(DeleteView):
+    model = BlogPost
+
+    success_url = "/blog/"
