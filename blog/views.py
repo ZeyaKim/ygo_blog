@@ -65,7 +65,7 @@ class PostDeleteView(DeleteView):
 
 class BlogSearchView(ListView):
     model = BlogPost
-    template_name = "blog_search_list.html"
+    template_name = "blog/blog_search_list.html"
     context_object_name = "results"
 
     def __init__(self, *args, **kwargs):
@@ -82,7 +82,7 @@ class BlogSearchView(ListView):
         return queryset
 
     def search_by_category(self, queryset):
-        category = self.request.GET.get("category")
+        category = self.kwargs.get("category")
         if category:
             queryset = queryset.filter(category=category)
         return queryset
