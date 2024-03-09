@@ -7,6 +7,7 @@ from django.views.generic import (
     DeleteView,
 )
 from blog.forms import BlogPostForm
+from django.http import HttpResponseRedirect
 
 
 class BlogListView(ListView):
@@ -55,3 +56,8 @@ class PostDeleteView(DeleteView):
     model = BlogPost
 
     success_url = "/blog/"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
