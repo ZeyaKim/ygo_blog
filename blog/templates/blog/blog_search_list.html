@@ -28,7 +28,7 @@
     <h2 class="main-title">게시판</h2>
 
     <div class="board-top">
-      <p class="main-desc"><strong>{{ posts|length }}개</strong>의 게시글이 있습니다.</p>
+      <p class="main-desc"><strong>{{ results|length }}개</strong>의 게시글이 있습니다.</p>
 
       <div>
         <label for="category" class="a11y-hidden">카테고리</label>
@@ -78,10 +78,10 @@
         </tr>
       </thead>
       <tbody>
-        {% for post in posts %}
+        {% for result in results %}
         <tr>
-          <td>{{ post.pk }}</td>
-          <td>{{ post.title }}</td>
+          <td>{{ result.pk }}</td>
+          <td>{{ result.title }}</td>
         {% empty %}
           <tr>
             <td colspan="2">게시글이 없습니다.</td>
