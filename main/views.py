@@ -14,3 +14,6 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class LoginView: ...
