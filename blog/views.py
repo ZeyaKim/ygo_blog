@@ -61,15 +61,19 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == post.author
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = BlogPost
-
+    login_url = "/login/"
     success_url = "/blog/"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
 
 class BlogSearchView(ListView):
