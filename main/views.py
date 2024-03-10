@@ -1,9 +1,10 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
+from django.contrib.auth.views import LoginView
 
 
-class MainView:
-    pass
+class MainView(TemplateView):
+    template_name = "index.html"
 
 
 class RegisterView(FormView):
@@ -16,4 +17,5 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
-class LoginView: ...
+class LoginView(LoginView):
+    template_name = "login.html"
