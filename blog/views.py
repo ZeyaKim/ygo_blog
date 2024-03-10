@@ -8,7 +8,7 @@ from django.views.generic import (
 )
 from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 class BlogListView(ListView):
@@ -44,7 +44,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
@@ -55,6 +55,10 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
 
 class PostDeleteView(DeleteView):
