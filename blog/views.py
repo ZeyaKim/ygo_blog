@@ -8,6 +8,7 @@ from django.views.generic import (
 )
 from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class BlogListView(ListView):
@@ -29,12 +30,14 @@ class BlogDetailView(DetailView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
     # fields = ["title", "category", "content"]
     success_url = "/blog/"
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
