@@ -44,10 +44,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
     success_url = "/blog/"
 
     def form_valid(self, form):
