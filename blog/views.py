@@ -8,6 +8,7 @@ from django.views.generic import (
 from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render
 
 
 class BlogListView(ListView):
@@ -16,7 +17,7 @@ class BlogListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["posts"] = BlogPost.objects.all()
+        context["posts"] = BlogPost.objects.filter(is_deleted=False)
         return context
 
 
@@ -27,6 +28,13 @@ class BlogDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
