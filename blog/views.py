@@ -50,6 +50,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = "/blog/"
     login_url = "/login/"
     redirect_field_name = "redirect_to"
+    # TODO add picture upload
 
     def form_valid(self, form):
         form.instance.author = self.request.user
