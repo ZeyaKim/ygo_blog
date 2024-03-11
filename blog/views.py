@@ -4,7 +4,6 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView,
 )
 from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
@@ -61,14 +60,16 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == post.author
 
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = BlogPost
     login_url = "/login/"
     success_url = "/blog/"
+    fields = ["is_deleted"]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.delete()
+        self.object.is_deleted = True
+        self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def test_func(self):
