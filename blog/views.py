@@ -39,6 +39,8 @@ class BlogDetailView(DetailView):
         if self.object.is_deleted:
             return render(request, "blog/blog_deleted_post.html")
         context = self.get_context_data(object=self.object)
+        self.object.views += 1
+        self.object.save()
         return self.render_to_response(context)
 
 
@@ -50,6 +52,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = "/blog/"
     login_url = "/login/"
     redirect_field_name = "redirect_to"
+    # TODO add picture upload
 
     def form_valid(self, form):
         form.instance.author = self.request.user
