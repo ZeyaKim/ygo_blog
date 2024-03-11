@@ -14,7 +14,7 @@ class BlogPost(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
-    # TODO Add Views
+    views = models.IntegerField(default=0)
 
     def __repr__(self):
         return self.title
