@@ -4,10 +4,12 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView,
 )
 from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render
+from django.http import Http404
 
 
 class BlogListView(ListView):
@@ -16,7 +18,7 @@ class BlogListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["posts"] = BlogPost.objects.all()
+        context["posts"] = BlogPost.objects.filter(is_deleted=False)
         return context
 
 
@@ -28,39 +30,64 @@ class BlogDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
 
-class PostCreateView(CreateView):
+        if self.object.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
     # fields = ["title", "category", "content"]
     success_url = "/blog/"
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
     success_url = "/blog/"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
-class PostDeleteView(DeleteView):
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = BlogPost
-
+    login_url = "/login/"
     success_url = "/blog/"
+    fields = ["is_deleted"]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.delete()
+        self.object.is_deleted = True
+        self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
 
 class BlogSearchView(ListView):
