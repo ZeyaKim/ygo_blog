@@ -9,6 +9,7 @@ from blog.forms import BlogPostForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
+from django.http import Http404
 
 
 class BlogListView(ListView):
@@ -30,7 +31,11 @@ class BlogDetailView(DetailView):
         return context
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
+
         if self.object.is_deleted:
             return render(request, "blog/blog_deleted_post.html")
         context = self.get_context_data(object=self.object)
