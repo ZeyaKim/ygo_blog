@@ -13,6 +13,7 @@ class BlogPost(models.Model):
     category = models.CharField(max_length=100, default="General")
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
 
     def __repr__(self):
         return self.title
