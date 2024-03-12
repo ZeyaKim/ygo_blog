@@ -15,10 +15,27 @@ from django.http import Http404
 class BlogListView(ListView):
     model = BlogPost
     template_name = "blog/blog_list.html"
+    context_object_name = "posts"  # 추가된 컨텍스트 변수명 설정
+
+    def get_queryset(self):
+        """
+        삭제되지 않은 게시글만 필터링하고, 'order' 매개변수에 따라 결과를 정렬합니다.
+        """
+        order = self.request.GET.get(
+            "order", "created_at"
+        )  # 기본값으로 'created_at' 사용
+        if order not in ["created_at", "-created_at", "views", "-views"]:
+            order = "created_at"  # 유효하지 않은 정렬 키가 주어진 경우 기본값을 사용
+        return BlogPost.objects.filter(is_deleted=False).order_by(order)
 
     def get_context_data(self, **kwargs):
+        """
+        필요한 추가 컨텍스트 변수들을 여기에 정의합니다.
+        """
         context = super().get_context_data(**kwargs)
-        context["posts"] = BlogPost.objects.filter(is_deleted=False)
+        context["order"] = self.request.GET.get(
+            "order", "created_at"
+        )  # 현재 정렬 기준을 컨텍스트에 추가
         return context
 
 
@@ -118,6 +135,10 @@ class BlogSearchView(ListView):
     def order_by_created_at(self, queryset):
         key = self.request.GET.get("order", "-")
         return queryset.order_by(f"{key}created_at")
+
+    def order_by_views(self, queryset):
+        key = self.request.GET.get("order", "-")
+        return queryset.order_by(f"{key}views")
 
 
 class PostRestoreView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
