@@ -6,78 +6,157 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ post.title }}</title>
-  <link rel="stylesheet" href="{% static './css/common.css' %}">
-  <link rel="stylesheet" href="{% static './css/view.css' %}">
+  <title>YGO Blog</title>
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
-  <!-- header -->
-  <div class="header">
-    <h1><a href="index.html">HTML/CSS 실습</a></h1>
-    <div class="header-click">
-      <a href="chat.html">채팅</a>
-      <a href="login.html">로그인</a>
-      <a href="join.html">회원가입</a>
-      <button type="button">로그아웃</button>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">HTML/CSS 실습</a>
+      <div class="navbar-nav ml-auto">
+        {% if not user.is_authenticated %}
+          <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+          <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% endif %}  
+        {% if user.is_authenticated %}
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light">로그아웃</button>
+          </form>
+        {% endif %}
+      </div>
     </div>
-  </div>
-  <!-- // header -->
+  </header>
+  <!-- // Header -->
 
-  <div class="main">
+  <main class="container my-5 post_main">
+    <h2 class="main-title">{{ object.title }}</h2>
+      <div class="row align-items-center">  <!-- 이 줄은 모든 항목을 수평으로 정렬합니다. -->
+          <div class="col-md-4">  <!-- 카테고리를 4열로 설정하고 왼쪽(시작)에 배치합니다. -->
+              <p class="mb-0"><span class="badge bg-secondary">{{ object.category }}</span></p>
+          </div>
+          <div class="col-md-8 text-md-end">  <!-- 작성자와 작성일을 오른쪽(끝)에 배치하기 위해 나머지 8열을 할당합니다. -->
+              <p class="mb-0">작성자: {{ object.author }} | 작성일: {{ object.created_at }}</p>
+          </div>
+      </div>
 
+    </div>
 
-    <h2 class="main-title"> {{ object.title }}</h2>
-
-
-    <div class="view">
-      <div class="view-header">
-        <div class="view-info">
+    <div class="view mt-3">
+      <div class="view-content p-3 bg-light border rounded">
+        {{ object.content | safe }}
+      </div>
+      {% if object.image %}
+        <div class="view-image mt-3">
+            <img src="{{ object.image.url }}" class="img-fluid" alt="{{ object.title }}">
         </div>
-      </div>
-      <div class="view-content">
-        {{ object.content }}
-      </div>
-      <div class="view-image">
-          {% if object.image %}
-              <img src="{{ object.image.url }}" alt="{{ object.title }}">
-          {% else %}
-              <!-- 이미지가 없을 경우 보여줄 대체 텍스트나 이미지 -->
-              <p>이미지가 없습니다.</p>
-          {% endif %}
-      </div>
+      {% endif %}
     </div>
-    <div class="btn-group">
-      <a href="./index.html" class="btn">목록</a>
-      <a href="#" class="btn">수정</a>
-      <button type="button" class="btn">삭제</button>
-    </div>
-    <div class="comments-section">
-      <h3>댓글</h3>
-      {% if user.is_authenticated %}
-      <form action="{% url 'comment_write' pk=object.pk %}" method="post">
+
+    <div class="mt-3 post-option d-flex justify-content-end">
+      <a href="{% url 'blog_list' %}" class="btn btn-secondary">목록</a>
+      <a href="{% url 'blog_edit' object.pk %}" class="btn btn-primary">수정</a>
+      <form action="{% url 'blog_delete' object.pk %}" method="post" style="display: inline;">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">댓글 작성</button>
+        <button type="submit" class="btn btn-danger">삭제</button>
+      </form>
+    </div>
+
+    <div class="comments-section mt-5">
+      {% if user.is_authenticated %}
+      <form action="{% url 'comment_write' object.pk %}" method="post" class="mb-3">
+          {% csrf_token %}
+          <div class="form-group">
+              <textarea class="form-control" name="content" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">댓글 작성</button>
       </form>
       {% else %}
-      <p><a href="{% url '/login/' %}">로그인</a> 후 댓글을 작성할 수 있습니다.</p>
+      <p><a href="{% url 'login' %}">로그인</a> 후 댓글을 작성할 수 있습니다.</p>
       {% endif %}
 
       <div class="comments">
         {% for comment in object.comments.all %}
-        <div class="comment">
-          <strong>{{ comment.author }}</strong>
-          <p>{{ comment.content }}</p>
-          <span>{{ comment.created_at }}</span>
+        <div class="card mb-3" id="comment-{{ comment.pk }}">
+          <div class="card-body comment-display" style="display: block;">
+            <p class="card-text">{{ comment.content }}</p>
+            <footer class="blockquote-footer d-flex justify-content-end">{{ comment.author }} <cite title="  Source Title">{{ comment.created_at }}</cite></footer>
+            <section class="comment-buttons d-flex justify-content-end mt-2">
+              {% if user.is_authenticated and user == comment.author %}
+              <button class="btn btn-primary btn-sm reply-btn" data-comment-id="{{ comment.pk }}">작성</button>
+              <button class="btn btn-primary btn-sm comment-edit-btn">수정</button>
+              <form action="{% url 'comment_delete' comment.pk %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+              </form>
+              {% endif %}
+            </section>
+          </div>
+          <form class ="comment-edit-form" action="{% url 'comment_edit' comment.pk %}" method="post" style="display: none;">
+            {% csrf_token %}
+            <textarea name="content" class="form-control">{{ comment.content }}</textarea>
+            <section class="mt-2">
+              <button type="submit" class="btn btn-primary btn-sm">저장</button>
+              <button type="button" class="btn btn-secondary btn-sm comment-edit-cancel-btn">취소</button>
+            </section>
+          </form>
         </div>
+        <div class="reply-form d-none" id="reply-form-{{ comment.pk }}">
+            <form action="{% url 'subcomment_write' comment.pk %}" method="post">
+              {% csrf_token %}
+              <textarea class="form-control" name="reply_content"></textarea>
+            <button type="submit" class="btn btn-primary btn-sm">댓글 작성</button>
+            <button type="button" class="btn btn-secondary btn-sm reply-cancel-btn" data-comment-id="{{ comment.pk }}">취소</button>
+          </form>
+        </div>
+        <div class="subcomments-list ml-4">
+          {% for subcomment in comment.subcomments.all %}
+            <div class="card mb-2"  style="display: block;">
+              <div class="card-body">
+                <p class="card-text">↳  {{ subcomment.content }}</p>
+                <footer class="blockquote-footer d-flex justify-content-end">
+                  {{ subcomment.author }} <cite title="Source Title">{{ subcomment.created_at }}</cite>
+                </footer>
+                <section class="comment-buttons d-flex justify-content-end mt-2">
+                  {% if user.is_authenticated and user == subcomment.author %}
+                  <button class="btn btn-primary btn-sm subcomment-edit-btn">수정</button>
+                  <form action="{% url 'subcomment_delete' subcomment.pk %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                  </form>
+                  {% endif %}
+              </div>
+            </div>
+            <form class="subcomment-edit-form" action="{% url 'subcomment_edit' subcomment.pk %}" method="post" style="display: none;">
+              {% csrf_token %}
+              <textarea name="content" class="form-control">{{ subcomment.content }}</textarea>
+              <section class="mt-2">
+                <button type="submit" class="btn btn-primary btn-sm">저장</button>
+                <button type="button" class="btn btn-secondary btn-sm subcomment-edit-cancel-btn">취소</button>
+              </section>
+            </form>
+          {% empty %}    
+          {% endfor %}
+        </div>
+        {% empty %}
+            <p class="text-muted">댓글이 없습니다.</p>
         {% endfor %}
       </div>
+
     </div>
-  </div>
-  <!-- footer -->
-  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
-  <!-- //footer -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer mt-5 py-3 bg-light">
+    <div class="container text-center">
+      <span class="text-muted">Copyright &copy; 2023 HTML/CSS 실습</span>
+    </div>
+  </footer>
+  <!-- //Footer -->
+  <script src="{% static 'js/view_comment_edit_form.js' %}"></script>
 </body>
 
 </html>

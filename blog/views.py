@@ -1,4 +1,4 @@
-from blog.models import BlogPost, BlogComment
+from blog.models import BlogPost, BlogComment, BlogSubComment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.http import Http404
 from django.views import View
+from django.db import transaction
 
 
 class BlogListView(ListView):
@@ -185,3 +186,105 @@ class CreateCommentView(LoginRequiredMixin, View):
             return HttpResponseRedirect(self.success_url)
         else:
             return HttpResponseRedirect(self.success_url)
+
+
+class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request, *args, **kwargs):
+        comment_pk = kwargs.get("comment_pk")
+        comment = BlogComment.objects.get(pk=comment_pk)
+
+        if not self.has_permission(request, comment):
+            return render(request, "blog/blog_deleted_post.html")
+
+        form = BlogCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            with transaction.atomic():
+                form.save()
+                return HttpResponseRedirect("/blog/")
+        else:
+            return render(request, "blog/comment_update.html", {"form": form})
+
+    def test_func(self):
+        comment = BlogComment.objects.get(pk=self.kwargs.get("comment_pk"))
+        return self.has_permission(self.request, comment)
+
+    def get_object(self):
+        comment_pk = self.kwargs.get("comment_pk")
+        post_pk = self.kwargs.get("post_pk")
+        try:
+            post = BlogPost.objects.get(pk=post_pk)
+            return BlogComment.objects.get(pk=comment_pk, post=post)
+        except (BlogPost.DoesNotExist, BlogComment.DoesNotExist):
+            return None
+
+    def has_permission(self, request, comment):
+        return request.user == comment.author
+
+
+class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request, *args, **kwargs):
+        comment_pk = kwargs.get("comment_pk")
+
+        comment = BlogComment.objects.get(pk=comment_pk)
+        if not request.user == comment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        # Delete the comment
+        comment.delete()
+        return HttpResponseRedirect("/blog/")
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_object(self):
+        comment_pk = self.kwargs.get("comment_pk")
+        try:
+            return BlogComment.objects.get(pk=comment_pk)
+        except BlogComment.DoesNotExist:
+            return None
+
+
+class CreateSubCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        comment_pk = kwargs.get("comment_pk")
+        try:
+            comment = BlogComment.objects.get(pk=comment_pk)
+        except BlogComment.DoesNotExist:
+            return render(request, "blog/blog_deleted_post.html")
+
+        author = request.user
+        content = request.POST.get("reply_content")
+        if content:
+            subcomment = BlogSubComment(author=author, content=content, comment=comment)
+            subcomment.save()
+        return HttpResponseRedirect(f"/blog/{comment.post.pk}/")
+
+
+class UpdateSubCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        subcomment_pk = kwargs.get("subcomment_pk")
+        subcomment = BlogSubComment.objects.get(pk=subcomment_pk)
+        if not request.user == subcomment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        form = BlogCommentForm(request.POST, instance=subcomment)
+        if form.is_valid():
+            with transaction.atomic():
+                form.save()
+                return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
+        else:
+            return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
+
+
+class DeleteSubCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        subcomment_pk = kwargs.get("subcomment_pk")
+        subcomment = BlogSubComment.objects.get(pk=subcomment_pk)
+        print(request.user, subcomment.author)
+        if not request.user == subcomment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        # Delete the subcomment
+        subcomment.delete()
+        return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
