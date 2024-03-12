@@ -10826,5 +10826,9 @@ textarea.form-control-lg {
 }
 
 main {
-  max-width: 1200px;
+  max-width: 900px;
+}
+
+.post_main {
+  min-height: 1000px;
 }

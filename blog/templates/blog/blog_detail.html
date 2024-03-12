@@ -30,7 +30,7 @@
   </header>
   <!-- // Header -->
 
-  <main class="container my-5">
+  <main class="container my-5 post_main">
     <h2 class="main-title">{{ object.title }}</h2>
     <div class="view mt-3">
       <div class="view-content p-3 bg-light border rounded">
@@ -40,8 +40,6 @@
         <div class="view-image mt-3">
             <img src="{{ object.image.url }}" class="img-fluid" alt="{{ object.title }}">
         </div>
-      {% else %}
-        <p class="text-muted mt-3">이미지가 없습니다.</p>
       {% endif %}
     </div>
 
