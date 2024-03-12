@@ -1,5 +1,6 @@
 from django.urls import path
-from main.views import RegisterView, LoginView, MainView, AccountView, LogoutView
+from main.views import RegisterView, LoginView, MainView, AccountView
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path("", MainView.as_view(), name="index"),
