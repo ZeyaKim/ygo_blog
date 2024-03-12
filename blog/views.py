@@ -185,3 +185,32 @@ class CreateCommentView(LoginRequiredMixin, View):
             return HttpResponseRedirect(self.success_url)
         else:
             return HttpResponseRedirect(self.success_url)
+
+
+class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
+    success_url = "/blog/"
+
+    def post(self, request, *args, **kwargs):
+        posts_pk = kwargs.get("pk")
+        try:
+            post = BlogPost.objects.get(pk=posts_pk)
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
+        if post.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+
+        self.success_url = f"/blog/{posts_pk}/"
+
+        comment_pk = request.POST.get("comment_pk")
+        comment = BlogComment.objects.get(pk=comment_pk)
+        content = request.POST.get("content")
+
+        if content:
+            comment.content = content
+            comment.save()
+            return HttpResponseRedirect(self.success_url)
+        else:
+            return HttpResponseRedirect(self.success_url)
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
