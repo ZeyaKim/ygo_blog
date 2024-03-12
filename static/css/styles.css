@@ -10829,3 +10829,7 @@ textarea.form-control-lg {
   max-width: 900px;
   min-height: 1000px;
 }
+
+.view-content {
+  min-height: 500px;
+}
