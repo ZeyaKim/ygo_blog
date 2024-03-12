@@ -1,4 +1,4 @@
-from blog.models import BlogPost
+from blog.models import BlogPost, BlogComment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -159,3 +159,27 @@ class PostRestoreView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.request.user == self.get_object().author
+
+
+class CreateCommentView(LoginRequiredMixin):
+    success_url = "/blog/"
+
+    def post(self, request, *args, **kwargs):
+        posts_pk = kwargs.get("pk")
+        try:
+            post = BlogPost.objects.get(pk=posts_pk)
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
+        if post.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+
+        self.success_url = f"/blog/{posts_pk}/"
+
+        author = request.user
+        content = request.POST.get("content")
+        if content:
+            comment = BlogComment(author=author, content=content, post=post)
+            comment.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return HttpResponseRedirect(self.get_success_url())
