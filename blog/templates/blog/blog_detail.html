@@ -6,98 +6,98 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ post.title }}</title>
-  <link rel="stylesheet" href="{% static './css/common.css' %}">
-  <link rel="stylesheet" href="{% static './css/view.css' %}">
+  <title>{{ object.title }}</title>
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    max-width: 1200px;
+  </style>
 </head>
 
 <body>
-  <!-- header -->
-  <div class="header">
-    <h1><a href="index.html">HTML/CSS 실습</a></h1>
-    <div class="header-click">
-      <a href="chat.html">채팅</a>
-      <a href="login.html">로그인</a>
-      <a href="join.html">회원가입</a>
-      <button type="button">로그아웃</button>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">HTML/CSS 실습</a>
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+        <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% if user.is_authenticated %}
+          <button type="button" class="btn btn-outline-dark" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
+        {% endif %}
+      </div>
     </div>
-  </div>
-  <!-- // header -->
+  </nav>
+  <!-- // Header -->
 
-  <div class="main">
-
-
-    <h2 class="main-title"> {{ object.title }}</h2>
-
-
-    <div class="view">
-      <div class="view-header">
-        <div class="view-info">
+  <div class="container my-5">
+    <h2 class="main-title">{{ object.title }}</h2>
+    <div class="view mt-3">
+      <div class="view-content p-3 bg-light border rounded">
+        {{ object.content | safe }}
+      </div>
+      {% if object.image %}
+        <div class="view-image mt-3">
+            <img src="{{ object.image.url }}" class="img-fluid" alt="{{ object.title }}">
         </div>
-      </div>
-      <div class="view-content">
-        {{ object.content }}
-      </div>
-      <div class="view-image">
-          {% if object.image %}
-              <img src="{{ object.image.url }}" alt="{{ object.title }}">
-          {% else %}
-              <!-- 이미지가 없을 경우 보여줄 대체 텍스트나 이미지 -->
-              <p>이미지가 없습니다.</p>
-          {% endif %}
-      </div>
+      {% else %}
+        <p class="text-muted mt-3">이미지가 없습니다.</p>
+      {% endif %}
     </div>
-    <div class="btn-group">
-      <a href="./index.html" class="btn">목록</a>
-      <a href="#" class="btn">수정</a>
-      <button type="button" class="btn">삭제</button>
+
+    <div class="btn-group mt-3">
+      <a href="{% url 'index' %}" class="btn btn-secondary">목록</a>
+      <a href="{% url 'blog_edit' object.pk %}" class="btn btn-primary">수정</a>
+      <form action="{% url 'blog_delete' object.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">삭제</button>
+      </form>
     </div>
-    <div class="comments-section">
+
+    <div class="comments-section mt-5">
       <h3>댓글</h3>
       {% if user.is_authenticated %}
-      <form action="{% url 'comment_write' pk=object.pk %}" method="post">
+      <form action="{% url 'comment_write' object.pk %}" method="post" class="mb-3">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">댓글 작성</button>
+          <div class="form-group">
+              <textarea class="form-control" name="content" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">댓글 작성</button>
       </form>
       {% else %}
       <p><a href="{% url 'login' %}">로그인</a> 후 댓글을 작성할 수 있습니다.</p>
       {% endif %}
-  
+
       <div class="comments">
         {% for comment in object.comments.all %}
-        <div class="comment" id="comment-{{ comment.pk }}">
-          <div class="comment-display">
-            <strong>{{ comment.author }}</strong>
-            <p>{{ comment.content }}</p>
-            <span>{{ comment.created_at }}</span>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">{{ comment.content }}</p>
+            <footer class="blockquote-footer">{{ comment.author }} <cite title="Source Title">{{ comment.created_at }}</cite></footer>
             {% if user == comment.author %}
-              <button id="edit_comment_btn" class="btn edit-btn">수정</button>
-              <form action="{% url 'comment_delete' post_pk=object.pk comment_pk=comment.pk %}" method="post" style="display: inline;">
+              <button class="btn btn-outline-secondary btn-sm edit-btn" data-comment-id="{{ comment.pk }}">수정</button>
+              <form action="{% url 'comment_delete' object.pk comment.pk %}" method="post" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn comment-delete">삭제</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
               </form>
             {% endif %}
           </div>
-          <div class="comment-edit-form" style="display: none;">
-            <form method="POST" action="{% url 'comment_edit' post_pk=object.pk comment_pk=comment.pk %}">
-              {% csrf_token %}
-              <textarea name="content" id="edit-content-{{ comment.pk }}">{{ comment.content }}</textarea>
-              <button type="submit" class="btn">수정 완료</button>
-              <button type="button" class="btn cancel-btn">취소</button>
-            </form>
-          </div>
-      </div>
+        </div>
         {% empty %}
-            <p>댓글이 없습니다.</p>
+            <p class="text-muted">댓글이 없습니다.</p>
         {% endfor %}
       </div>
     </div>
   </div>
-  <!-- footer -->
-  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
-  <!-- //footer -->
-  <script src="{% static './js/view_comment_edit_form.js' %}"></script>
+
+  <!-- Footer -->
+  <footer class="footer mt-5 py-3 bg-light">
+    <div class="container text-center">
+      <span class="text-muted">Copyright &copy; 2023 HTML/CSS 실습</span>
+    </div>
+  </footer>
+  <!-- //Footer -->
+  <script src="{% static 'js/view_comment_edit_form.js' %}"></script>
 </body>
 
 </html>
