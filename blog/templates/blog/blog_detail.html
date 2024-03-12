@@ -13,7 +13,7 @@
 
 <body>
   <!-- Header -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <header class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="{% url 'index' %}">HTML/CSS 실습</a>
       <div class="navbar-nav ml-auto">
@@ -27,10 +27,10 @@
         {% endif %}
       </div>
     </div>
-  </nav>
+  </header>
   <!-- // Header -->
 
-  <div class="container my-5">
+  <main class="container my-5">
     <h2 class="main-title">{{ object.title }}</h2>
     <div class="view mt-3">
       <div class="view-content p-3 bg-light border rounded">
@@ -88,7 +88,7 @@
         {% endfor %}
       </div>
     </div>
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer class="footer mt-5 py-3 bg-light">
