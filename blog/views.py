@@ -216,4 +216,17 @@ class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
         return self.request.user == self.get_object().author
 
 
-class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View): ...
+class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request, *args, **kwargs):
+        posts_pk = kwargs.get("pk")
+        try:
+            post = BlogPost.objects.get(pk=posts_pk)
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
+        if post.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+
+        comment_pk = request.POST.get("comment_pk")
+        comment = BlogComment.objects.get(pk=comment_pk)
+        comment.delete()
+        return HttpResponseRedirect(f"/blog/{posts_pk}/")
