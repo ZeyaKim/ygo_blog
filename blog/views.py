@@ -226,8 +226,8 @@ class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
         comment_pk = kwargs.get("comment_pk")
 
         try:
-            BlogPost.objects.get(pk=post_pk)
-            comment = BlogComment.objects.get(pk=comment_pk)
+            post = BlogPost.objects.get(pk=post_pk)
+            comment = BlogComment.objects.get(pk=comment_pk, post=post)
         except (BlogPost.DoesNotExist, BlogComment.DoesNotExist):
             # Handle case when the post or comment doesn't exist
             return render(request, "blog/blog_deleted_post.html")
