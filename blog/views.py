@@ -215,5 +215,44 @@ class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user == self.get_object().author
 
+    def get_object(self):
+        comment_pk = self.request.POST.get("comment_pk")
+        return BlogComment.objects.get(pk=comment_pk)
 
-class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View): ...
+
+class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request, *args, **kwargs):
+        posts_pk = kwargs.get("pk")
+        try:
+            post = BlogPost.objects.get(pk=posts_pk)
+        except BlogPost.DoesNotExist:
+            return render(request, "blog/blog_deleted_post.html")
+        if post.is_deleted:
+            return render(request, "blog/blog_deleted_post.html")
+
+        comment_pk = request.POST.get("comment_pk")
+        try:
+            comment = BlogComment.objects.get(pk=comment_pk)
+        except BlogComment.DoesNotExist:
+            # Handle case when the comment doesn't exist
+            return render(request, "blog/blog_deleted_post.html")
+
+        # Check if the user has permission to delete the comment
+        if not request.user == comment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        # Delete the comment
+        comment.delete()
+        return HttpResponseRedirect(f"/blog/{posts_pk}/")
+
+    def test_func(self):
+        # Assuming you have overridden `get_object` to return the comment object
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_object(self):
+        comment_pk = self.request.POST.get("comment_pk")
+        try:
+            return BlogComment.objects.get(pk=comment_pk)
+        except BlogComment.DoesNotExist:
+            return None
