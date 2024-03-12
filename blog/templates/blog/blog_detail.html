@@ -66,19 +66,28 @@
   
       <div class="comments">
         {% for comment in object.comments.all %}
-        <div class="comment">
-          <strong>{{ comment.author }}</strong>
-          <p>{{ comment.content }}</p>
-          <span>{{ comment.created_at }}</span>
-          <!-- 현재 사용자가 댓글의 작성자인 경우 수정 및 삭제 버튼 표시 -->
-          {% if user == comment.author %}
-            <a href="{% url 'comment_edit' comment.pk %}" class="btn">수정</a>
-            <form action="{% url 'comment_delete' post_pk=object.pk comment_pk=comment.pk %}" method="post" style="display: inline;">
+        <div class="comment" id="comment-{{ comment.pk }}">
+          <div class="comment-display">
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.content }}</p>
+            <span>{{ comment.created_at }}</span>
+            {% if user == comment.author %}
+              <button id="edit_comment_btn" class="btn edit-btn">수정</button>
+              <form action="{% url 'comment_delete' post_pk=object.pk comment_pk=comment.pk %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn comment-delete">삭제</button>
+              </form>
+            {% endif %}
+          </div>
+          <div class="comment-edit-form" style="display: none;">
+            <form method="POST" action="{% url 'comment_edit' post_pk=object.pk comment_pk=comment.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn comment-delete">삭제</button>
+              <textarea name="content" id="edit-content-{{ comment.pk }}">{{ comment.content }}</textarea>
+              <button type="submit" class="btn">수정 완료</button>
+              <button type="button" class="btn cancel-btn">취소</button>
             </form>
-          {% endif %}
-        </div>
+          </div>
+      </div>
         {% empty %}
             <p>댓글이 없습니다.</p>
         {% endfor %}
@@ -88,7 +97,7 @@
   <!-- footer -->
   <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
   <!-- //footer -->
-  <scripts src="{% static './js/view_comment_edit_form.js' %}"></scripts>
+  <script src="{% static './js/view_comment_edit_form.js' %}"></script>
 </body>
 
 </html>
