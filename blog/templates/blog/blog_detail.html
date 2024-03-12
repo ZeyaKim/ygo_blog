@@ -34,7 +34,7 @@
     <h2 class="main-title">{{ object.title }}</h2>
     <div class="row align-items-center mt-3">
         <div class="col-md-6">
-            <p class="mb-0">카테고리: <span class="badge bg-secondary">{{ object.category }}</span></p>
+            <p class="mb-0"><span class="badge bg-secondary">{{ object.category }}</span></p>
         </div>
         <div class="col-md-6 text-md-end">
             <p class="mb-0">작성일: {{ object.created_at }}</p>
@@ -111,15 +111,15 @@
             {% for subcomment in comment.subcomments.all %}
                 <div class="card mb-2">
                     <div class="card-body">
-                        <p class="card-text">{{ subcomment.content }}</p>
-                        <footer class="blockquote-footer">
+                        <p class="card-text">↳  {{ subcomment.content }}</p>
+                        <footer class="blockquote-footer d-flex justify-content-end">
                             {{ subcomment.author }} <cite title="Source Title">{{ subcomment.created_at }}</cite>
                         </footer>
                         <!-- Subcomment actions (if needed) -->
                     </div>
                 </div>
             {% empty %}
-                <p class="text-muted">하위 댓글이 없습니다.</p>
+                
             {% endfor %}
         </div>
         {% empty %}
