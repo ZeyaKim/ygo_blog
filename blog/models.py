@@ -14,6 +14,22 @@ class BlogPost(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
+    views = models.IntegerField(default=0)
+    image = models.ImageField(upload_to="images/", blank=True, null=True)
 
     def __repr__(self):
         return self.title
+
+
+class BlogComment(models.Model):
+    content = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default="0"
+    )
+    post = models.ForeignKey(
+        "blog.BlogPost", on_delete=models.CASCADE, related_name="comments"
+    )
+
+    def __repr__(self):
+        return self.content
