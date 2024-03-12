@@ -8,6 +8,7 @@ from blog.views import (
     BlogSearchView,
     CreateCommentView,
     UpdateCommentView,
+    DeleteCommentView,
 )
 
 urlpatterns = [
@@ -20,7 +21,8 @@ urlpatterns = [
     path("restore/<int:pk>/", BlogDetailView.as_view(), name="blog_restore"),
     path("comment/write/<int:pk>/", CreateCommentView.as_view(), name="comment_write"),
     path("comment/edit/<int:pk>/", UpdateCommentView.as_view(), name="comment_edit"),
-    # TODO: Add comment edit and delete views
+    path("comment/delete/<int:pk>/", DeleteCommentView.as_view(), name="comment_delete"),
+    
 ]
 
 # Step 3
