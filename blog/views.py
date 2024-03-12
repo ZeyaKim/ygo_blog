@@ -5,11 +5,12 @@ from django.views.generic import (
     CreateView,
     UpdateView,
 )
-from blog.forms import BlogPostForm
+from blog.forms import BlogPostForm, BlogCommentForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.http import Http404
+from django.views import View
 
 
 class BlogListView(ListView):
@@ -45,6 +46,7 @@ class BlogDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["form"] = BlogCommentForm()
         return context
 
     def get(self, request, *args, **kwargs):
@@ -161,7 +163,7 @@ class PostRestoreView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == self.get_object().author
 
 
-class CreateCommentView(LoginRequiredMixin):
+class CreateCommentView(LoginRequiredMixin, View):
     success_url = "/blog/"
 
     def post(self, request, *args, **kwargs):
@@ -180,6 +182,6 @@ class CreateCommentView(LoginRequiredMixin):
         if content:
             comment = BlogComment(author=author, content=content, post=post)
             comment.save()
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect(self.success_url)
         else:
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect(self.success_url)
