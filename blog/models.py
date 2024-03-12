@@ -33,3 +33,17 @@ class BlogComment(models.Model):
 
     def __repr__(self):
         return self.content
+
+
+class BlogSubComment(models.Model):
+    content = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default="0"
+    )
+    comment = models.ForeignKey(
+        "blog.BlogComment", on_delete=models.CASCADE, related_name="subcomments"
+    )
+
+    def __repr__(self):
+        return self.content
