@@ -44,7 +44,7 @@
     </div>
 
     <div class="mt-3 post-option d-flex justify-content-end">
-      <a href="{% url 'index' %}" class="btn btn-secondary">목록</a>
+      <a href="{% url 'blog_list' %}" class="btn btn-secondary">목록</a>
       <a href="{% url 'blog_edit' object.pk %}" class="btn btn-primary">수정</a>
       <form action="{% url 'blog_delete' object.pk %}" method="post" style="display: inline;">
         {% csrf_token %}
@@ -67,23 +67,33 @@
 
       <div class="comments">
         {% for comment in object.comments.all %}
-        <div class="card mb-3">
-          <div class="card-body">
+        <div class="card mb-3" id="comment-{{ comment.pk }}">
+          <div class="card-body comment-display" style="display: block;">
             <p class="card-text">{{ comment.content }}</p>
             <footer class="blockquote-footer">{{ comment.author }} <cite title="Source Title">{{ comment.created_at }}</cite></footer>
-            {% if user == comment.author %}
-              <button class="btn btn-outline-secondary btn-sm edit-btn" data-comment-id="{{ comment.pk }}">수정</button>
-              <form action="{% url 'comment_delete' object.pk comment.pk %}" method="post" style="display: inline;">
+            {% if user.is_authenticated %}
+              <button class="btn btn-outline-secondary btn-sm reply-btn" data-comment-id="{{ comment.pk }}">댓글 작성</button>
+              {% if user == comment.author %}
+              <button class="btn btn-outline-secondary btn-sm comment-edit-btn">수정</button>
+              <form action="{% url 'comment_delete' comment.pk %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
               </form>
+              {% endif %}
             {% endif %}
           </div>
+          <form class ="comment-edit-form" action="{% url 'comment_edit' comment.pk %}" method="post" style="display: none;">
+            {% csrf_token %}
+            <textarea name="content" class="form-control">{{ comment.content }}</textarea>
+            <button type="submit" class="btn btn-primary btn-sm">저장</button>
+            <button type="button" class="btn btn-secondary btn-sm comment-edit-cancel-btn">취소</button>
+          </form>
         </div>
         {% empty %}
             <p class="text-muted">댓글이 없습니다.</p>
         {% endfor %}
       </div>
+
     </div>
   </main>
 

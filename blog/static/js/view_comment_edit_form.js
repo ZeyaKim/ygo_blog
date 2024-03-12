@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.edit-btn').forEach(function (button) {
+    document.querySelectorAll('.comment-edit-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             var commentId = this.parentElement.parentElement.id.split('-')[1];
             var displayDiv = document.querySelector('#comment-' + commentId + ' .comment-display');
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('.cancel-btn').forEach(function (button) {
+    document.querySelectorAll('.comment-edit-cancel-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             var commentId = this.closest('.comment').id.split('-')[1];
             var displayDiv = document.querySelector('#comment-' + commentId + ' .comment-display');
