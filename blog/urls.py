@@ -18,6 +18,7 @@ urlpatterns = [
     path("search/<str:category>", BlogSearchView.as_view(), name="blog_search"),
     path("restore/<int:pk>/", BlogDetailView.as_view(), name="blog_restore"),
     path("comment/write/<int:pk>/", CreateCommentView.as_view(), name="comment_write"),
+    # TODO: Add comment edit and delete views
 ]
 
 # Step 3
