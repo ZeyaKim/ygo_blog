@@ -215,6 +215,10 @@ class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user == self.get_object().author
 
+    def get_object(self):
+        comment_pk = self.request.POST.get("comment_pk")
+        return BlogComment.objects.get(pk=comment_pk)
+
 
 class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
     def post(self, request, *args, **kwargs):
@@ -230,3 +234,10 @@ class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
         comment = BlogComment.objects.get(pk=comment_pk)
         comment.delete()
         return HttpResponseRedirect(f"/blog/{posts_pk}/")
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    def get_object(self):
+        comment_pk = self.request.POST.get("comment_pk")
+        return BlogComment.objects.get(pk=comment_pk)
