@@ -39,7 +39,12 @@
         {{ object.content }}
       </div>
       <div class="view-image">
-        <img src="{{ object.image.url }}" alt="{{ object.title }}">
+          {% if object.image %}
+              <img src="{{ object.image.url }}" alt="{{ object.title }}">
+          {% else %}
+              <!-- 이미지가 없을 경우 보여줄 대체 텍스트나 이미지 -->
+              <p>이미지가 없습니다.</p>
+          {% endif %}
       </div>
     </div>
     <div class="btn-group">
