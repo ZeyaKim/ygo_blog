@@ -81,6 +81,7 @@
             <footer class="blockquote-footer d-flex justify-content-end">{{ comment.author }} <cite title="  Source Title">{{ comment.created_at }}</cite></footer>
             <section class="comment-buttons d-flex justify-content-end mt-2">
               {% if user.is_authenticated and user == comment.author %}
+              <button class="btn btn-primary btn-sm reply-btn" data-comment-id="{{ comment.pk }}">작성</button>
               <button class="btn btn-primary btn-sm comment-edit-btn">수정</button>
               <form action="{% url 'comment_delete' comment.pk %}" method="post" style="display: inline;">
                 {% csrf_token %}
@@ -97,6 +98,29 @@
               <button type="button" class="btn btn-secondary btn-sm comment-edit-cancel-btn">취소</button>
             </section>
           </form>
+        </div>
+        <div class="reply-form d-none" id="reply-form-{{ comment.pk }}">
+            <form action="{% url 'subcomment_write' comment.pk %}" method="post">
+              {% csrf_token %}
+              <textarea class="form-control" name="reply_content"></textarea>
+              <button type="submit" class="btn btn-primary btn-sm">댓글 작성</button>
+              <button type="button" class="btn btn-secondary btn-sm reply-cancel-btn" data-comment-id="{{ comment.pk }}">취소</button>
+            </form>
+        </div>
+        <div class="subcomments-list ml-4">
+            {% for subcomment in comment.subcomments.all %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p class="card-text">{{ subcomment.content }}</p>
+                        <footer class="blockquote-footer">
+                            {{ subcomment.author }} <cite title="Source Title">{{ subcomment.created_at }}</cite>
+                        </footer>
+                        <!-- Subcomment actions (if needed) -->
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">하위 댓글이 없습니다.</p>
+            {% endfor %}
         </div>
         {% empty %}
             <p class="text-muted">댓글이 없습니다.</p>

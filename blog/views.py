@@ -254,7 +254,7 @@ class CreateSubCommentView(LoginRequiredMixin, View):
             return render(request, "blog/blog_deleted_post.html")
 
         author = request.user
-        content = request.POST.get("content")
+        content = request.POST.get("reply_content")
         if content:
             subcomment = BlogSubComment(author=author, content=content, comment=comment)
             subcomment.save()
