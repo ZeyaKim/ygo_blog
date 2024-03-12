@@ -274,7 +274,7 @@ class UpdateSubCommentView(LoginRequiredMixin, View):
                 form.save()
                 return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
         else:
-            return render(request, "blog/comment_update.html", {"form": form})
+            return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
 
 
 class DeleteSubCommentView(LoginRequiredMixin, View):
