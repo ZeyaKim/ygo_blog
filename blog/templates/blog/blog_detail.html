@@ -56,21 +56,31 @@
       <h3>댓글</h3>
       {% if user.is_authenticated %}
       <form action="{% url 'comment_write' pk=object.pk %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">댓글 작성</button>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">댓글 작성</button>
       </form>
       {% else %}
-      <p><a href="{% url '/login/' %}">로그인</a> 후 댓글을 작성할 수 있습니다.</p>
+      <p><a href="{% url 'login' %}">로그인</a> 후 댓글을 작성할 수 있습니다.</p>
       {% endif %}
-
+  
       <div class="comments">
         {% for comment in object.comments.all %}
         <div class="comment">
           <strong>{{ comment.author }}</strong>
           <p>{{ comment.content }}</p>
           <span>{{ comment.created_at }}</span>
+          <!-- 현재 사용자가 댓글의 작성자인 경우 수정 및 삭제 버튼 표시 -->
+          {% if user == comment.author %}
+            <a href="{% url 'comment_edit' comment.pk %}" class="btn">수정</a>
+            <form action="{% url 'comment_delete' comment.pk %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn">삭제</button>
+            </form>
+          {% endif %}
         </div>
+        {% empty %}
+            <p>댓글이 없습니다.</p>
         {% endfor %}
       </div>
     </div>
