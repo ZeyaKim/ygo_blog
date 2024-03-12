@@ -9,6 +9,7 @@ from blog.views import (
     CreateCommentView,
     UpdateCommentView,
     DeleteCommentView,
+    CreateSubCommentView,
 )
 
 urlpatterns = [
@@ -29,6 +30,11 @@ urlpatterns = [
         "comment/delete/<int:post_pk>/<int:comment_pk>/",
         DeleteCommentView.as_view(),
         name="comment_delete",
+    ),
+    path(
+        "subcomment/write/<int:comment_pk>/",
+        CreateSubCommentView.as_view(),
+        name="subcomment_write",
     ),
 ]
 
