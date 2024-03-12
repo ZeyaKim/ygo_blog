@@ -114,7 +114,7 @@
         </div>
         <div class="subcomments-list ml-4">
           {% for subcomment in comment.subcomments.all %}
-            <div class="card mb-2" id="subcomment-{{ subcomment.pk }}" style="display: block;">
+            <div class="card mb-2"  style="display: block;">
               <div class="card-body">
                 <p class="card-text">↳  {{ subcomment.content }}</p>
                 <footer class="blockquote-footer d-flex justify-content-end">
@@ -137,6 +137,7 @@
                 <button type="submit" class="btn btn-primary btn-sm">저장</button>
                 <button type="button" class="btn btn-secondary btn-sm subcomment-edit-cancel-btn">취소</button>
               </section>
+            </form>
           {% empty %}    
           {% endfor %}
         </div>

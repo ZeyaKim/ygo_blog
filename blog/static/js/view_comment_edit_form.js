@@ -34,4 +34,29 @@ document.addEventListener('DOMContentLoaded', function () {
       replyForm.classList.add('d-none'); // Bootstrap의 d-none 클래스를 토글합니다.
     });
   });
+
+  document.querySelectorAll('.subcomment-edit-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+      // Here, you'll need to correctly navigate to the parent .card element of the button
+      var subcommentCard = this.closest('.card');
+      // Now, target the .subcomment-display and .subcomment-edit-form classes within this card
+      var displayDiv = subcommentCard.querySelector('.card-body'); // Assuming this is your display div
+      var editForm = subcommentCard.nextElementSibling; // Assuming your edit form follows immediately after the card
+      displayDiv.style.display = 'none'; // Hide the display div
+      editForm.style.display = 'block'; // Show the edit form
+    });
+  });
+
+  document.querySelectorAll('.subcomment-edit-cancel-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+      // Again, find the nearest .card element (this time, the form itself is part of what needs to be hidden)
+      var subcommentCard = this.closest('.card').previousElementSibling; // Assuming the card that needs to be shown is immediately preceding the form
+      // Now, toggle the display of .card-body and the form
+      var displayDiv = subcommentCard.querySelector('.card-body');
+      var editForm = this.closest('.subcomment-edit-form');
+      displayDiv.style.display = 'block'; // Show the display div
+      editForm.style.display = 'none'; // Hide the edit form
+    });
+  });
+
 });
