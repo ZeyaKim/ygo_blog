@@ -259,3 +259,32 @@ class CreateSubCommentView(LoginRequiredMixin, View):
             subcomment = BlogSubComment(author=author, content=content, comment=comment)
             subcomment.save()
         return HttpResponseRedirect(f"/blog/{comment.post.pk}/")
+
+
+class UpdateSubCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        subcomment_pk = kwargs.get("subcomment_pk")
+        subcomment = BlogSubComment.objects.get(pk=subcomment_pk)
+        if not request.user == subcomment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        form = BlogCommentForm(request.POST, instance=subcomment)
+        if form.is_valid():
+            with transaction.atomic():
+                form.save()
+                return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
+        else:
+            return render(request, "blog/comment_update.html", {"form": form})
+
+
+class DeleteSubCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        subcomment_pk = kwargs.get("subcomment_pk")
+        subcomment = BlogSubComment.objects.get(pk=subcomment_pk)
+        print(request.user, subcomment.author)
+        if not request.user == subcomment.author:
+            return render(request, "blog/blog_deleted_post.html")
+
+        # Delete the subcomment
+        subcomment.delete()
+        return HttpResponseRedirect(f"/blog/{subcomment.comment.post.pk}/")
