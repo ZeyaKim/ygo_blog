@@ -214,3 +214,6 @@ class UpdateCommentView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def test_func(self):
         return self.request.user == self.get_object().author
+
+
+class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, View): ...
