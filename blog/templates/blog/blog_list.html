@@ -20,7 +20,7 @@
   <header class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand" href="{% url 'index' %}">HTML/CSS 실습</a>
-      <div class="navbar-nav ml-auto">
+      <nav class="navbar-nav ml-auto">
         <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
         <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
         {% if user.is_authenticated %}
@@ -29,17 +29,17 @@
             <button type="submit" class="btn btn-outline-light">로그아웃</button>
           </form>
         {% endif %}
-      </div>
+      </nav>
     </div>
   </header>
   <!-- // Header -->
 
-  <div class="container mt-5">
-    <h2 class="main-title">게시판</h2>
+  <main class="container mt-5" id="post-list">
+    <h1 class="main-title">게시판</h1>
     <p class="main-desc"><strong>{{ posts|length }}</strong>개의 게시글이 있습니다.</p>
 
     <!-- 게시판 리스트 -->
-    <div class="table-responsive">
+    <section class="table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -66,13 +66,13 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
+    </section>
     <!-- //게시판 리스트 -->
 
-    <div class="board-bottom d-flex justify-content-end">
+    <aside class="board-bottom d-flex justify-content-end">
       <a href="{% url 'blog_write' %}" class="btn btn-primary">글쓰기</a>
-    </div>
-  </div>
+    </aside>
+  </main>
 
   <!-- Footer -->
   <footer class="py-5 bg-dark">
