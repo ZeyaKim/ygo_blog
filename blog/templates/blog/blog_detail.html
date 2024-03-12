@@ -22,7 +22,7 @@
         {% if user.is_authenticated %}
           <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline-dark">로그아웃</button>
+            <button type="submit" class="btn btn-outline-light">로그아웃</button>
           </form>
         {% endif %}
       </div>
@@ -32,6 +32,14 @@
 
   <main class="container my-5 post_main">
     <h2 class="main-title">{{ object.title }}</h2>
+    <div class="row align-items-center mt-3">
+        <div class="col-md-6">
+            <p class="mb-0">카테고리: <span class="badge bg-secondary">{{ object.category }}</span></p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <p class="mb-0">작성일: {{ object.created_at }}</p>
+        </div>
+    </div>
     <div class="view mt-3">
       <div class="view-content p-3 bg-light border rounded">
         {{ object.content | safe }}
@@ -70,23 +78,24 @@
         <div class="card mb-3" id="comment-{{ comment.pk }}">
           <div class="card-body comment-display" style="display: block;">
             <p class="card-text">{{ comment.content }}</p>
-            <footer class="blockquote-footer">{{ comment.author }} <cite title="Source Title">{{ comment.created_at }}</cite></footer>
-            {% if user.is_authenticated %}
-              <button class="btn btn-outline-secondary btn-sm reply-btn" data-comment-id="{{ comment.pk }}">댓글 작성</button>
-              {% if user == comment.author %}
-              <button class="btn btn-outline-secondary btn-sm comment-edit-btn">수정</button>
+            <footer class="blockquote-footer d-flex justify-content-end">{{ comment.author }} <cite title="  Source Title">{{ comment.created_at }}</cite></footer>
+            <section class="comment-buttons d-flex justify-content-end mt-2">
+              {% if user.is_authenticated and user == comment.author %}
+              <button class="btn btn-primary btn-sm comment-edit-btn">수정</button>
               <form action="{% url 'comment_delete' comment.pk %}" method="post" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
+                <button type="submit" class="btn btn-danger btn-sm">삭제</button>
               </form>
               {% endif %}
-            {% endif %}
+            </section>
           </div>
           <form class ="comment-edit-form" action="{% url 'comment_edit' comment.pk %}" method="post" style="display: none;">
             {% csrf_token %}
             <textarea name="content" class="form-control">{{ comment.content }}</textarea>
-            <button type="submit" class="btn btn-primary btn-sm">저장</button>
-            <button type="button" class="btn btn-secondary btn-sm comment-edit-cancel-btn">취소</button>
+            <section class="mt-2">
+              <button type="submit" class="btn btn-primary btn-sm">저장</button>
+              <button type="button" class="btn btn-secondary btn-sm comment-edit-cancel-btn">취소</button>
+            </section>
           </form>
         </div>
         {% empty %}
