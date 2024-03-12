@@ -48,11 +48,9 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blog_write.html"
-    # fields = ["title", "category", "content"]
     success_url = "/blog/"
     login_url = "/login/"
     redirect_field_name = "redirect_to"
-    # TODO add picture upload
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -120,3 +118,23 @@ class BlogSearchView(ListView):
     def order_by_created_at(self, queryset):
         key = self.request.GET.get("order", "-")
         return queryset.order_by(f"{key}created_at")
+
+
+class PostRestoreView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = BlogPost
+    fields = ["is_deleted"]
+    login_url = "/login/"
+    success_url = "/blog/"
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return render(request, "blog/blog_deleted_post.html")
+
+        self.object.is_deleted = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
