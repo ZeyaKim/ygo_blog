@@ -25,4 +25,20 @@ class DeckDetailView(DetailView):
         return post
 
 
-class DeckPostCreateView(LoginRequiredMixin, CreateView): ...
+class DeckPostCreateView(LoginRequiredMixin, CreateView):
+    model = DeckPost
+    template_name = "decks/deck_create.html"
+    fields = ["title", "content", "image", "tags"]
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class MatchRecordListView(ListView): ...
+
+
+class MatchRecordDetailView(DetailView): ...
+
+
+class MatchRecordCreateView(CreateView): ...
