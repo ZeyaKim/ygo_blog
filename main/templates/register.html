@@ -1,6 +1,67 @@
-<!-- register.html -->
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">회원가입</button>
-</form>
+<!DOCTYPE html>
+<html lang="ko-KR">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - YGO Blog</title>
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">YGO BLOG</a>
+      <div class="navbar-nav ml-auto">
+        <!-- Authentication Links -->
+        {% if not user.is_authenticated %}
+          <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+          <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% else %}
+          <span class="navbar-text mr-3">안녕하세요, {{ user.username }}!</span>
+          <form action="{% url 'logout' %}" method="post" class="form-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light">로그아웃</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <!-- // Header -->
+
+  <main class="container my-5">
+    <h1 class="main-title text-center">회원가입</h1>
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control {% if field.errors %}is-invalid{% endif %}" value="{{ field.value|default_if_none:'' }}">
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">저작권 &copy; YGO BLOG 2023</p>
+    </div>
+  </footer>
+  <!-- //Footer -->
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

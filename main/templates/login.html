@@ -2,54 +2,69 @@
 <html lang="ko-KR">
 
 <head>
+  {% load static %}
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로그인</title>
-  <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/login-join.css">
+  <title>로그인 - YGO Blog</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/common.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
-  <!-- header -->
-  <div class="header">
-    <h1><a href="index.html">HTML/CSS 실습</a></h1>
-    <div class="header-click">
-      <a href="chat.html">채팅</a>
-      <a href="login.html">로그인</a>
-      <a href="join.html">회원가입</a>
-      <button type="button">로그아웃</button>
-    </div>
-  </div>
-  <!-- // header -->
-
-  <div class="main">
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <h2 class="title">로그인</h2>
-      <p class="description">아이디와 비밀번호를 입력하고 로그인하세요</p>
-
-      <form class="login" action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div>
-          <label class="label-width" for="id_username">아이디</label>
-          <input type="text" id="id_username" name="username" required>
+      <a class="navbar-brand" href="{% url 'index' %}">YGO BLOG</a>
+      <div class="navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ml-auto">
+          <a class="nav-link" href="{% url 'login' %}">로그인</a>
+          <a class="nav-link" href="{% url 'register' %}">회원가입</a>
         </div>
-        <div>
-          <label class="label-width" for="id_password">비밀번호</label>
-          <input type="password" id="id_password" name="password" required>
-        </div>
-        <div>
-          <input type="checkbox" id="save-id" name="saveId">
-          <label for="save-id">아이디 저장</label>
-        </div>
-        <button class="submit-button" type="submit">로그인</button>
-      </form>
+      </div>
     </div>
-  </div>
+  </header>
+  <!-- // Header -->
 
-  <!-- footer -->
-  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
-  <!-- //footer -->
+  <main class="container mt-5">
+    <h2 class="title text-center">로그인</h2>
+    <p class="description text-center">아이디와 비밀번호를 입력하고 로그인하세요</p>
+    
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-6">
+        <form class="login-form bg-light p-4 rounded" action="{% url 'login' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_username" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="id_username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_password" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="id_password" name="password" required>
+          </div>
+          <div class="form-check mb-4">
+            <input type="checkbox" class="form-check-input" id="save-id" name="saveId">
+            <label class="form-check-label" for="save-id">아이디 저장</label>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">로그인</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer bg-dark text-white text-center py-3">
+    <div class="container">
+      Copyright &copy; YGO BLOG 2023. All rights reserved.
+    </div>
+  </footer>
+  <!-- //Footer -->
+
+  <!-- Bootstrap core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

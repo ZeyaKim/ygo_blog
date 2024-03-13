@@ -6,61 +6,76 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ account.username }}의 프로필</title>
-  <link rel="stylesheet" href="{% static 'css/common.css' %}">
-  <link rel="stylesheet" href="{% static 'css/table.css' %}">
-  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <title>{{ account.username }}의 프로필 - YGO Blog</title>
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
-  <!-- header -->
-  <div class="header">
-    <h1><a href="/index/">YGO BLOG</a></h1>
-    <div class="header-click">
-      <a href="/login/">로그인</a>
-      <a href="/join/">회원가입</a>
-      <button type="button">로그아웃</button>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">YGO BLOG</a>
+      <div class="navbar-nav ms-auto">
+        {% if not user.is_authenticated %}
+          <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+          <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% else %}
+          <span class="navbar-text mr-3">안녕하세요, {{ user.username }}!</span>
+          <form action="{% url 'logout' %}" method="post" class="form-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light">로그아웃</button>
+          </form>
+        {% endif %}
+      </div>
     </div>
-  </div>
-  <!-- // header -->
+  </header>
+  <!-- // Header -->
 
-  <div class="main">
-    <h2 class="main-title">{{ account.username }}의 프로필</h2>
+  <main class="container my-5">
+    <h2 class="main-title text-center">{{ account.username }}의 프로필</h2>
 
     <!-- 계정 정보 -->
-    <div class="account-info">
-      <table class="table list">
-        <tbody>
-          <tr>
-            <th>사용자명</th>
-            <td>{{ account.username }}</td>
-          </tr>
-          <tr>
-            <th>이메일</th>
-            <td>{{ account.email }}</td>
-          </tr>
-          <tr>
-            <th>이름</th>
-            <td>{{ account.first_name }}</td>
-          </tr>
-          <tr>
-            <th>성</th>
-            <td>{{ account.last_name }}</td>
-          </tr>
-          <!-- 추가적으로 필요한 정보가 있으면 여기에 더 행을 추가하세요 -->
-        </tbody>
-      </table>
+    <div class="account-info my-4">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">사용자명</th>
+              <td>{{ account.username }}</td>
+            </tr>
+            <tr>
+              <th scope="row">이메일</th>
+              <td>{{ account.email }}</td>
+            </tr>
+            <tr>
+              <th scope="row">이름</th>
+              <td>{{ account.first_name }}</td>
+            </tr>
+            <tr>
+              <th scope="row">성</th>
+              <td>{{ account.last_name }}</td>
+            </tr>
+            <!-- 추가적으로 필요한 정보가 있으면 여기에 더 행을 추가하세요 -->
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- //계정 정보 -->
 
-    <div class="btn-group">
-      <a href="/account/edit/{{ account.pk }}/" class="btn">정보 수정</a>
+    <div class="d-flex justify-content-center">
+      
     </div>
-  </div>
+  </main>
 
-  <!-- footer -->
-  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
-  <!-- //footer -->
+  <!-- Footer -->
+  <footer class="footer bg-dark text-white text-center py-3">
+    <div class="container">
+      저작권 &copy; YGO BLOG 2023. All rights reserved.
+    </div>
+  </footer>
+  <!-- //Footer -->
+
 </body>
 
 </html>
