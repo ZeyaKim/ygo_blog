@@ -2,50 +2,72 @@
 <html lang="ko-KR">
 
 <head>
+  {% load static %}
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>글쓰기</title>
-  <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/table.css">
-  <link rel="stylesheet" href="./css/write.css">
-
+  <title>글쓰기 - YGO Blog</title>
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
-  <!-- header -->
-  <div class="header">
-    <h1><a href="index.html">HTML/CSS 실습</a></h1>
-    <div class="header-click">
-      <a href="chat.html">채팅</a>
-      <a href="login.html">로그인</a>
-      <a href="join.html">회원가입</a>
-      <button type="button">로그아웃</button>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">YGO BLOG</a>
+      <div class="navbar-nav ml-auto">
+        {% if not user.is_authenticated %}
+          <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+          <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% else %}
+          <span class="navbar-text mr-3 username-spacing">안녕하세요, {{ user.username }}!</span>
+          <form action="{% url 'logout' %}" method="post" class="form-inline logout-spacing">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light">로그아웃</button>
+          </form>
+        {% endif %}
+      </div>
     </div>
-  </div>
-  <!-- // header -->
+  </header>
+  <!-- // Header -->
 
-  <div class="main">
+  <div class="main container my-5">
     <!-- 글쓰기 페이지 -->
     <h2 class="main-title">글쓰기</h2>
-    <p class="main-desc">내용을 입력 해주세요.</p>
-
-    <form method="post" enctype="multipart/form-data">
+    <p class="main-desc">내용을 입력해주세요.</p>
+  
+    <form method="post" enctype="multipart/form-data" action="{% url 'blog_write' %}" class="needs-validation" novalidate>
       {% csrf_token %}
-      {{ form.as_p }}
+      {% for field in form %}
+        <div class="mb-3">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
       <div class="btn-group">
-        <a href="./blog_list.html" class="btn">목록</a>
-        <button type="reset" class="btn">초기화</button>
-        <button type="submit" class="btn">작성</button>
+        <a href="{% url 'blog_list' %}" class="btn btn-secondary">목록</a>
+        <button type="reset" class="btn btn-warning">초기화</button>
+        <button type="submit" class="btn btn-primary">작성</button>
       </div>
     </form>
-
-    <!--  //글쓰기 페이지 -->
+    <!-- //글쓰기 페이지 -->
   </div>
 
-  <!-- footer -->
-  <p class="footer">Copyright 2023. Chilli All rights reserved.</p>
-  <!-- //footer -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">저작권 &copy; YGO BLOG 2023</p>
+    </div>
+  </footer>
+  <!-- //Footer -->
 </body>
 
 </html>

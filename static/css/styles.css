@@ -10837,3 +10837,11 @@ textarea.form-control-lg {
 main {
   min-height: 800px;
 }
+
+.username-spacing {
+  margin-right: 20px; /* 오른쪽 간격 설정 */
+}
+
+.logout-spacing {
+  margin-left: 20px; /* 왼쪽 간격 설정 */
+}
