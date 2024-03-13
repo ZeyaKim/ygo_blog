@@ -2,9 +2,63 @@
 
 ---
 
+## WBS
+
+```mermaid
+gantt
+    title A Gantt Diagram
+    dateFormat  YYYY-MM-DD
+    section 기획
+    컨셉 기획           :2024-03-07, 2d
+    section FE
+    화면 기획      :2024-03-9  , 1d
+    wireframe 제작 : 2024-03-10, 2d
+    부트스트랩 적용 : 2024-03-11, 2d
+    section BE
+    URL 구조 기획   : 2024-03-08, 2d
+    CRUD 구현   : 2024-03-09, 1d
+    인증 구현   : 2024-03-10, 1d
+    Blog 구현   : 2024-03-09, 3d
+```
+
 ## 설계
 
 ---
+
+### URL 구조
+
+```mermaid
+graph TD;
+    Home('') --> Admin("admin/")
+    Home --> Main("Main")
+    Home --> Blog("blog/")
+    Home --> Decks("decks/")
+    Main --> Register("register/")
+    Main --> Login("login/")
+    Main --> Logout("logout/")
+    Main --> Account("account/&lt;int:pk&gt;/")
+    Blog --> BlogList("''")
+    Blog --> BlogDetail("&lt;int:pk&gt;/")
+    Blog --> BlogWrite("write/")
+    Blog --> BlogEdit("edit/&lt;int:pk&gt;/")
+    Blog --> BlogDelete("delete/&lt;int:pk&gt;/")
+    Blog --> BlogSearch("search/&lt;str:category&gt;")
+    Blog --> BlogRestore("restore/&lt;int:pk&gt;/")
+    Blog --> CommentWrite("comment/write/&lt;int:pk&gt;/")
+    Blog --> CommentEdit("comment/edit/&lt;int:comment_pk&gt;/")
+    Blog --> CommentDelete("comment/delete/&lt;int:comment_pk&gt;/")
+    Blog --> SubCommentWrite("subcomment/write/&lt;int:comment_pk&gt;/")
+    Blog --> SubCommentEdit("subcomment/edit/&lt;int:subcomment_pk&gt;/")
+    Blog --> SubCommentDelete("subcomment/delete/&lt;int:subcomment_pk&gt;/")
+    Decks --> DeckList("''")
+    Decks --> DeckDetail("&lt;int:pk&gt;/")
+    Decks --> DeckPostWrite("deck_post/write/")
+    Decks --> MatchRecordList("match_record/")
+    Decks --> MatchRecordDetail("match_record/&lt;int:pk&gt;/")
+    Decks --> MatchRecordWrite("match_record/write/")
+
+
+```
 
 ### ER Diagram
 
