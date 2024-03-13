@@ -14,7 +14,7 @@ class DeckPost(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-    description = models.TextField()
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deck_img = models.ImageField(upload_to="decks/images/")
