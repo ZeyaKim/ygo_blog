@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.views.generic import ListView
 
-# Create your views here.
+
+# TODO: DeckListView
+class DeckListView(ListView):
+    pass
+
+# TODO: DeckDetailView
+class DeckDetailView(ListView):
+    pass
