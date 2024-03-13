@@ -5,6 +5,7 @@ from django.views.generic import ListView
 class DeckListView(ListView):
     pass
 
+
 # TODO: DeckDetailView
 class DeckDetailView(ListView):
     pass
