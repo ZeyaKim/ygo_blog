@@ -25,4 +25,3 @@ urlpatterns = [
         name="match_record_write",
     ),
 ]
-
