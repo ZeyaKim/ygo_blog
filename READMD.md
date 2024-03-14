@@ -17,20 +17,39 @@ YGO Blog는 제가 좋아하는 게임중 하나인 유희왕에 대해 정보 �
 
 ### 1.2 기능
 
+Main
+
+- 메인
+- 현재 계정정보 조회
+- 회원가입
+- 로그인
+- 로그아웃
+
 Blog
 
 - 게시글 작성, 수정, 삭제
 - 댓글, 대댓글 작성, 수정, 삭제
 - 게시글 검색 by category
 
+- 삭제된 게시글 복구
+
 Decks
 
 - 덱 포스트 작성, 수정, 삭제
 - 매치 기록 작성, 수정, 삭제
 
-### 1
+### 1.3 개발환경
 
-## WBS
+- vscode
+- django framework
+- python
+
+- html, css, js
+- bootstrap
+
+- git, github
+
+#### WBS
 
 ```mermaid
 gantt
@@ -58,6 +77,20 @@ gantt
 ![list](https://media.discordapp.net/attachments/1111153532184301630/1217623417797476495/blog_Untitled_1.png?ex=6604b32d&is=65f23e2d&hm=fbfc5c7923dbccf0af9849a7f0f61b8a6f5e85c4db5c3129e1c68e0b3b33dbd8&=&format=webp&quality=lossless&width=1352&height=676)
 
 ---
+
+### 실제 화면
+
+- 메인 페이지
+
+![list](https://media.discordapp.net/attachments/1111153532184301630/1217642707208503411/image.png?ex=6604c524&is=65f25024&hm=9074b49d1353453a5439d17b91cbb43e572fcc6f3ccee49c1ea4ecd630d67d59&=&format=webp&quality=lossless&width=1007&height=676)
+
+- 덱 리스트
+
+![list](https://media.discordapp.net/attachments/1111153532184301630/1217633799307788288/image.png?ex=6604bcd8&is=65f247d8&hm=b81df4e7c15f879c9080e0f0233e2a44169f57deb00fefa0306d5eebaa321caa&=&format=webp&quality=lossless)
+
+- 덱 상세
+
+![list](https://media.discordapp.net/attachments/1111153532184301630/1217643815259734027/image.png?ex=6604c62c&is=65f2512c&hm=87704d11083822fc1612a9e55b4088012d7e7046852a49101dbfc103b3abd5c6&=&format=webp&quality=lossless&width=1057&height=676)
 
 ### URL 구조
 

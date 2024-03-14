@@ -4,6 +4,7 @@ from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from decks.forms import DeckPostForm
 from django.urls import reverse_lazy
+import json
 
 
 class DeckListView(ListView):
@@ -56,12 +57,14 @@ class DeckPostCreateView(LoginRequiredMixin, CreateView):
 
         # form.cleaned_data에서 덱 데이터를 가져옵니다.
         decks_str = form.cleaned_data[
-            "decks"
+            "tags"
         ]  # 'decks' 필드는 form에서 문자열로 덱 이름들을 받는다고 가정
-        decks_list = decks_str.split(",")  # 쉼표로 구분된 문자열을 리스트로 변환
-
+        print(decks_str)
+        decks_list = json.loads(decks_str)  # JSON 문자열을 파이썬 리스트로 변환
+        print(decks_list)
         # 덱 리스트에서 각 덱에 대해 처리
-        for deck_name in decks_list:
+        for deck_map in decks_list:
+            deck_name = deck_map["value"]
             deck_name = deck_name.strip()  # 공백 제거
             if deck_name:  # 덱 이름이 비어있지 않은 경우에만 처리
                 deck, created = Deck.objects.get_or_create(

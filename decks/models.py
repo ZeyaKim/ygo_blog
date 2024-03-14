@@ -7,7 +7,7 @@ class Deck(models.Model):
     deck_name = models.CharField(max_length=100, unique=True)  # 덱 이름은 고유해야 함
 
     def __repr__(self):
-        return self.deck_name
+        return "f{self.deck_name}"
 
 
 class DeckPost(models.Model):
