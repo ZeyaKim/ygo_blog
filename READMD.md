@@ -25,6 +25,12 @@ gantt
 
 ---
 
+### Wireframe
+
+![list](https://media.discordapp.net/attachments/1111153532184301630/1217623417797476495/blog_Untitled_1.png?ex=6604b32d&is=65f23e2d&hm=fbfc5c7923dbccf0af9849a7f0f61b8a6f5e85c4db5c3129e1c68e0b3b33dbd8&=&format=webp&quality=lossless&width=1352&height=676)
+
+---
+
 ### URL 구조
 
 ```mermaid
