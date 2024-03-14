@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ deck.title }} - YGO Blog</title>
+  <title>{{ object.title }} - YGO Blog</title>
   <!-- Additional CSS Files -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -33,23 +33,30 @@
   <!-- // Header -->
 
   <main class="container my-5 post_main">
-    <h2 class="main-title">{{ deck.title }}</h2>
+    <h2 class="main-title">{{ object.title }}</h2>
+    <div class="deck-badges">
+      {% for deck in decks %}
+        <span class="badge bg-dark">{{ deck.deck_name }}</span>
+      {% empty %}
+        <span class="badge bg-dark">No Decks</span>
+      {% endfor %}
+    </div>
     <div class="row align-items-center">
       <div class="col-md-4">
-        <p class="mb-0">작성자: {{ deck.author }}</p>
+        <p class="mb-0">작성자: {{ object.author }}</p>
       </div>
       <div class="col-md-8 text-md-end">
-        <p class="mb-0">작성일: {{ deck.created_at|date:"Y-m-d" }}</p>
+        <p class="mb-0">작성일: {{ object.created_at|date:"Y-m-d" }}</p>
       </div>
     </div>
 
     <div class="view mt-3">
       <div class="view-content p-3 bg-light border rounded">
-        {{ deck.content | safe }}
+        {{ object.content | safe }}
       </div>
-      {% if deck.deck_list %}
+      {% if object.deck_list %}
         <div class="view-image mt-3">
-          <img src="{{ deck.deck_list.url }}" class="img-fluid" alt="{{ deck.title }}">
+          <img src="{{ object.deck_list.url }}" class="img-fluid" alt="{{ object.title }}">
         </div>
       {% endif %}
     </div>
