@@ -212,7 +212,7 @@ erDiagram
     DeckInDeckPost ||--|| Deck : "deck_name"
     MatchRecord ||--o{ MatchDeck : "match"
     MatchDeck ||--|| Deck : "deck_name"
-
+```
 
 폴더 구조
 
