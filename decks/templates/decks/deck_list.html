@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>덱 리스트 - YGO Blog</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">YGO BLOG</a>
+      <nav class="navbar-nav ms-auto">
+        {% if not user.is_authenticated %}
+        <a class="nav-item nav-link" href="{% url 'login' %}">로그인</a>
+        <a class="nav-item nav-link" href="{% url 'register' %}">회원가입</a>
+        {% else %}
+        <span class="navbar-text">안녕하세요, {{ user.username }}!</span>
+        <form action="{% url 'logout' %}" method="post" class="form-inline ms-2">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-light">로그아웃</button>
+        </form>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mt-5">
+    <h1 class="main-title">덱 리스트</h1>
+    <p class="main-desc">총 <strong>{{ decks|length }}</strong>개의 덱이 있습니다.</p>
+
+    <section class="table-responsive">
+      <table class="table table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">덱 이름</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for deck_post in decks %}
+          <tr>
+            <th scope="row">{{ deck_post.pk }}</th>
+            <td><a href="{% url 'deck_detail' deck_post.pk %}" class="text-decoration-none">{{ deck_post.title }}</a></td>
+            <td>{{ deck_post.author.username }}</td>
+            <td>{{ deck_post.created_at|date:"Y-m-d" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">덱이 없습니다.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    {% if user.is_authenticated %}
+    <aside class="board-bottom d-flex justify-content-end mt-4">
+      <a href="{% url 'deck_post_write' %}" class="btn btn-primary">덱 생성</a>
+    </aside>
+    {% endif %}
+  </main>
+
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">저작권 &copy; YGO BLOG 2023</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>
